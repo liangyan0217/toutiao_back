@@ -7,7 +7,7 @@
         <!-- unique-opened 是否只保持一个菜单项展开 -->
         <!-- router 是否使用 vue-router 的模式，启用该模式会在激活导航时以 index 作为 path 进行路由跳转 -->
         <el-menu
-          default-active="2"
+          :default-active="$route.path.substr($route.path.lastIndexOf('/')+1)"
           class="el-menu-vertical-demo"
           background-color="#545c64"
           text-color="#fff"
@@ -34,7 +34,7 @@
               <i class="el-icon-s-order"></i>
               <span>文章列表</span>
             </el-menu-item>
-            <el-menu-item index="2-2">
+            <el-menu-item index="postPublish">
               <i class="el-icon-s-promotion"></i>
               <span>文章发布</span>
             </el-menu-item>
@@ -56,16 +56,12 @@
           <i class="el-icon-s-fold toggle-btn"></i>
           <span class="system-title">黑马头条后台管理系统</span>
           <div class="welcome">
-            <span>欢迎您，管理员</span> &nbsp;&nbsp;
-            <span>退出</span>
-          </div>
-          <!-- <div>
             <span>
               <img :src="baseURL+userInfo.head_img" alt />
             </span>
-            <span class="welcome">欢迎您，管理员</span>
-            <a>退出</a>
-          </div> -->
+            <span>欢迎您，管理员</span> &nbsp;&nbsp;
+            <span>退出</span>
+          </div>
         </el-header>
         <el-main>
           <router-view></router-view>
@@ -76,20 +72,21 @@
 </template>
 
 <script>
-// import { user } from "@/apis/use";
+import { user } from "@/apis/use";
 export default {
-  // data() {
-  //   return {
-  //     baseURL: "",
-  //     userInfo: "",
-  //   };
-  // },
-  // async mounted() {
-  //   let res = await user(localStorage.getItem("toutiao_back_userId"));
-  //   console.log(res);
-  //   this.baseURL = res.config.baseURL;
-  //   this.userInfo = res.data.data;
-  // },
+  data() {
+    return {
+      baseURL: "",
+      userInfo: "",
+    };
+  },
+  async mounted() {
+    let res = await user(localStorage.getItem("toutiao_back_userId"));
+    console.log(res);
+    this.baseURL = res.config.baseURL;
+    this.userInfo = res.data.data;
+    console.log(this.$route.path);
+  },
 };
 </script>
 
@@ -112,18 +109,20 @@ export default {
     justify-content: space-between;
     align-items: center;
     background-color: #545c64;
-    // span {
-    //   > img {
-    //     border-radius: 50%;
-    //     height: 40px;
-    //   }
-    // }
-    // > div {
-    //   > span {
-    //     vertical-align: middle;
-    //     margin: 0 15px 0 0;
-    //   }
-    // }
+    span {
+      > img {
+        border-radius: 50%;
+        height: 40px;
+      }
+    }
+    > .welcome {
+      color: white;
+      cursor: pointer;
+      > span {
+        vertical-align: middle;
+        margin: 0 15px 0 0;
+      }
+    }
   }
   .logo {
     height: 60px;
@@ -146,10 +145,6 @@ export default {
   .system-title {
     font-size: 28px;
     color: white;
-  }
-  .welcome {
-    color: white;
-    cursor: pointer;
   }
 }
 </style>

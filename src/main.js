@@ -5,7 +5,7 @@ import Css from '@/styles/index.less'
 import "babel-polyfill"
 // 按需引入 Element
 import 'element-ui/lib/theme-chalk/index.css';
-import { Button,Input,Form,FormItem,Message,Container,Aside,Header,Menu,Submenu,MenuItem,Main} from 'element-ui'
+import { Button,Input,Form,FormItem,Message,Container,Aside,Header,Menu,Submenu,MenuItem,Main,Breadcrumb,BreadcrumbItem,Table,TableColumn,Card,Pagination,Radio,RadioGroup,Upload,Checkbox,CheckboxGroup,Dialog} from 'element-ui'
 Vue.use(Button)
     .use(Input)
     .use(Form)
@@ -17,6 +17,18 @@ Vue.use(Button)
     .use(Submenu)
     .use(MenuItem)
     .use(Main)
+    .use(Breadcrumb)
+    .use(BreadcrumbItem)
+    .use(Table)
+    .use(TableColumn)
+    .use(Card)
+    .use(Pagination)
+    .use(Radio)
+    .use(RadioGroup)
+    .use(Upload)
+    .use(Checkbox)
+    .use(CheckboxGroup)
+    .use(Dialog)
 
 Vue.prototype.$message = Message
 

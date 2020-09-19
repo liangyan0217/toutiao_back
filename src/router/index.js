@@ -10,7 +10,7 @@ import Login from '@/views/login.vue'
 import Index from '@/views/index.vue'
 import Welcome from '@/views/welcome.vue'
 import PostList from '@/views/posts/postList.vue'
-
+import PostPublish from '@/views/posts/postPublish.vue'
 // 创建路由对象
 const router = new VueRouter({
   // 添加路由配置，实现路由映射组件
@@ -41,6 +41,11 @@ const router = new VueRouter({
           name: 'postList',
           path: 'postList',
           component: PostList
+        },
+        {
+          name: 'postPublish',
+          path: 'postPublish',
+          component: PostPublish
         },
       ]
     },

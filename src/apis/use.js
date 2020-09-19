@@ -14,9 +14,8 @@ export const login=(data)=>{
 // 接口类型:【GET】
 // 需要验证:【Authorization 】
 // 接口地址: /user/:id
-// export const user =(id)=>{
-//   return myaxios({
-//     url:`/user/${id}`,
-//     headers: { Authorization: localStorage.getItem('toutiao_back_token')}
-//   })
-// }
+export const user =(id)=>{
+  return myaxios({
+    url:`/user/${id}`,
+  })
+}
