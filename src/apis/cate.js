@@ -5,6 +5,6 @@ import myaxios from '@/utils/myaxios'
 // 接口地址: /category
 export const category=()=>{
   return myaxios({
-    url:'/category',
+    url:'/category'
   })
 }

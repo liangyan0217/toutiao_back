@@ -6,8 +6,9 @@
         <!-- default-active 展开指定索引的菜单项 -->
         <!-- unique-opened 是否只保持一个菜单项展开 -->
         <!-- router 是否使用 vue-router 的模式，启用该模式会在激活导航时以 index 作为 path 进行路由跳转 -->
+        <!-- :default-active="$route.path.substr($route.path.lastIndexOf('/')+1) -->
         <el-menu
-          :default-active="$route.path.substr($route.path.lastIndexOf('/')+1)"
+          :default-active="$route.path"
           class="el-menu-vertical-demo"
           background-color="#545c64"
           text-color="#fff"
@@ -30,11 +31,11 @@
               <i class="el-icon-document"></i>
               <span>文章管理</span>
             </template>
-            <el-menu-item index="postList">
+            <el-menu-item index="/index/postList">
               <i class="el-icon-s-order"></i>
               <span>文章列表</span>
             </el-menu-item>
-            <el-menu-item index="postPublish">
+            <el-menu-item index="/index/postPublish">
               <i class="el-icon-s-promotion"></i>
               <span>文章发布</span>
             </el-menu-item>

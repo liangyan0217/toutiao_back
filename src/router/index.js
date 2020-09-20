@@ -42,11 +42,17 @@ const router = new VueRouter({
           path: 'postList',
           component: PostList
         },
+        // ?代表参数可以没有，也可以有一个
         {
           name: 'postPublish',
-          path: 'postPublish',
+          path: 'postPublish/:id?',
           component: PostPublish
         },
+        // {
+        //   name: 'postEdit',
+        //   path: 'postEdit/:id',
+        //   component: PostPublish
+        // },
       ]
     },
   ]

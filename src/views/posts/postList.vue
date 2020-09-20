@@ -2,7 +2,7 @@
   <div class="postList">
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/index' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>文章管理</el-breadcrumb-item>
+      <el-breadcrumb-item><a href="javascript:;">文章管理</a></el-breadcrumb-item>
       <el-breadcrumb-item>文章列表</el-breadcrumb-item>
     </el-breadcrumb>
     <el-card
@@ -102,6 +102,7 @@ export default {
       // 编辑
       handleEdit(row) {
         console.log(row);
+        this.$router.push({path:"postPublish/"+row.id})
       },
       // 删除
       handleDelete(row) {

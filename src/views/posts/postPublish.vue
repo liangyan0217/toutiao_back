@@ -1,5 +1,10 @@
 <template>
   <div class="postPublish">
+    <el-breadcrumb separator="/">
+      <el-breadcrumb-item :to="{ path: '/index' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item><a href="javascript:;">文章管理</a></el-breadcrumb-item>
+      <el-breadcrumb-item>文章发布</el-breadcrumb-item>
+    </el-breadcrumb>
     <el-card class="box-card" style="margin-top:20px">
       <el-form ref="form" :model="post" label-width="80px">
         <el-form-item label="标题">
@@ -41,6 +46,7 @@
           <el-upload
             action="http://127.0.0.1:3000/upload"
             list-type="picture-card"
+            :on-preview="handlePictureCardPreview"
             :on-remove="handleRemove"
             :on-success="onSuccess"
             :headers="getToken()"
@@ -52,14 +58,14 @@
             <img width="100%" :src="dialogImageUrl" alt />
           </el-dialog>
         </el-form-item>
-        <el-button type="primary" @click="handlePublish">发布文章</el-button>
+        <el-button type="primary" @click="handlePublish" ref="btn">发布文章</el-button>
       </el-form>
     </el-card>
   </div>
 </template>
 <script>
-import { category } from "@/apis/articles";
-import { postPublish } from "@/apis/cate";
+import { postPublish, postDetail, postEdit } from "@/apis/articles";
+import { category } from "@/apis/cate";
 import VueEditor from "vue-word-editor";
 import "quill/dist/quill.snow.css";
 export default {
@@ -125,6 +131,7 @@ export default {
     // 视频上传成功时触发
     handleSuccess(response, file, fileList) {
       console.log(response, file, fileList);
+      console.log(this.fileList);
       this.post.content = "http://127.0.0.1:3000" + response.data.url;
     },
     // 封装的请求头用户信息验证
@@ -134,15 +141,30 @@ export default {
     // 点击发布文章时触发
     async handlePublish() {
       if (this.post.type == 1) {
+        // 富文本框内容
         this.post.content = this.$refs.pulishContent.editor.root.innerHTML;
       }
+      // 处理栏目
       this.post.categories = this.post.categories.map((v) => {
         return { id: v };
       });
-      let res = await postPublish(this.post);
-      this.$router.push({name:'postList'})
-      console.log(this.post);
-      console.log(res);
+      // 保存编辑
+      if (this.$route.params.id) {
+        let res2 = await postEdit(this.$route.params.id, this.post);
+        console.log(res2);
+        if (res2.data.message === "文章编辑成功") {
+          this.$message.success("文章编辑成功");
+        }
+      } else {
+        // 发布文章
+        let res = await postPublish(this.post);
+        console.log(this.post);
+        console.log(res);
+        if (res.data.message === "文章发布成功") {
+          this.$message.success("文章发布成功");
+        }
+      }
+      this.$router.push({ name: "postList" });
     },
     // 点击全选复选框触发
     handleCheckAllChange(val) {
@@ -152,7 +174,6 @@ export default {
           })
         : [];
       this.isIndeterminate = false;
-      // console.log(this.post.categories);
     },
     // 点击栏目复选框触发
     handleCheckedCateChange(value) {
@@ -161,17 +182,17 @@ export default {
       this.isIndeterminate =
         checkedCount > 0 && checkedCount < this.cateList.length;
     },
-    // 点击文件列表中已上传的文件时的钩子
+    // 文件列表移除文件时的钩子
     handleRemove(file, fileList) {
       console.log(file, fileList);
-      this.post.cover.forEach((value,index)=>{
-        if(value.id==file.id){
-          this.post.cover.splice(index,1)
+      this.post.cover.forEach((value, index) => {
+        if (value.id == file.id) {
+          this.post.cover.splice(index, 1);
         }
-      })
+      });
       console.log(this.post.cover);
     },
-    // 文件列表移除文件时的钩子
+    // 点击文件列表中已上传的文件时的钩子
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
@@ -181,6 +202,31 @@ export default {
     let res = await category();
     console.log(res);
     this.cateList = res.data.data.splice(2);
+    // 判断是否有id，有id编辑，无id新增发布
+    let id = this.$route.params.id;
+    if (id) {
+      console.log(this.$refs.btn);
+      // this.$refs.btn.innerHTML()="保存编辑"
+      let res = await postDetail(id);
+      console.log(res);
+      this.post = res.data.data;
+      // 富文本框内容
+      this.$refs.pulishContent.editor.clipboard.dangerouslyPasteHTML(
+        0,
+        this.post.content
+      );
+      // 栏目
+      this.post.categories = this.post.categories.map((v) => {
+        return v.id;
+      });
+      // 封面
+      this.post.cover = this.post.cover.map((v) => {
+        if (v.url.indexOf("http") === -1) {
+          v.url = "http://127.0.0.1:3000" + v.url;
+        }
+        return v;
+      });
+    }
   },
 };
 </script>
