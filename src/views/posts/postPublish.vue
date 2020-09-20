@@ -224,9 +224,10 @@ export default {
         if (v.url.indexOf("http") === -1) {
           v.url = "http://127.0.0.1:3000" + v.url;
         }
-        return v;
+        return {id:v.id,url:v.url};
       });
     }
+    console.log(this.post);
   },
 };
 </script>
