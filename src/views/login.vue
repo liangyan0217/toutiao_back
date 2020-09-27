@@ -1,29 +1,43 @@
 <template>
   <div class="login">
     <div class="container">
-      <img class="avatar" src="../assets/avatar.jpg">
+      <img class="avatar" src="../assets/avatar.jpg" />
       <!-- rules 验证规则 -->
       <el-form :model="loginForm" :rules="rules" ref="loginForm">
         <el-form-item prop="username">
-          <el-input v-model="loginForm.username" placeholder="请输入用户名" prefix-icon="icon-user" @focus="handleValidate('username')"></el-input>
+          <el-input
+            v-model="loginForm.username"
+            placeholder="请输入用户名"
+            prefix-icon="icon-user"
+            @focus="handleValidate('username')"
+          ></el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input v-model="loginForm.password" placeholder="请输入密码" prefix-icon="icon-key" @focus="handleValidate('password')" @keyup.enter.native="handleLogin"></el-input>
+          <el-input
+            v-model="loginForm.password"
+            placeholder="请输入密码"
+            prefix-icon="icon-key"
+            @focus="handleValidate('password')"
+            @keyup.enter.native="handleLogin"
+            type="password"
+          ></el-input>
         </el-form-item>
-        <el-button type="primary" class="login-btn" @click="handleLogin">登陆</el-button>
-      </el-form>  
+        <el-button type="primary" class="login-btn" @click="handleLogin"
+          >登陆</el-button
+        >
+      </el-form>
     </div>
   </div>
 </template>
 
 <script>
-import {login} from '@/apis/use'
+import { login } from "@/apis/use";
 export default {
   data() {
     return {
       loginForm: {
-        username: "",
-        password: "",
+        username: "10086",
+        password: "123",
       },
       rules: {
         username: [
@@ -40,47 +54,46 @@ export default {
   methods: {
     // clearValidate 移除表单项的校验结果
     // 传入待移除的表单项的 prop 属性或者 prop 组成的数组，如不传则移除整个表单的校验结果
-    handleValidate(propsValue){
-      this.$refs.loginForm.clearValidate(propsValue)
+    handleValidate(propsValue) {
+      this.$refs.loginForm.clearValidate(propsValue);
     },
-    handleLogin(){
-      // validate 对整个表单进行校验 
+    handleLogin() {
+      // validate 对整个表单进行校验
       // 先进行用户输入的验证--二次验证，只有通过验证才会进行登陆的提交
-      this.$refs.loginForm.validate(async(valid,obj)=>{
+      this.$refs.loginForm.validate(async (valid, obj) => {
         console.log(valid);
-        if(valid){
-          let res = await login(this.loginForm)
+        if (valid) {
+          let res = await login(this.loginForm);
           console.log(res);
-          if(res.data.statusCode===401){
+          if (res.data.statusCode === 401) {
             this.$message({
               message: res.data.message,
-              type: 'warning'
+              type: "warning",
             });
-          }else{
+          } else {
             this.$message({
               message: res.data.message,
-              type: 'success'
+              type: "success",
             });
-            localStorage.setItem('toutiao_back_token',res.data.data.token)
-            localStorage.setItem('toutiao_back_userId',res.data.data.user.id)
-            this.$router.push({name:'index'})
+            localStorage.setItem("toutiao_back_token", res.data.data.token);
+            localStorage.setItem("toutiao_back_userId", res.data.data.user.id);
+            this.$router.push({ name: "index" });
           }
-        }else{
+        } else {
           this.$message({
-              message: '输入不合法',
-              type: 'warning'
+            message: "输入不合法",
+            type: "warning",
           });
-          return false
+          return false;
         }
-      })
+      });
     },
-
-  }
+  },
 };
 </script>
 
 <style lang="less" scoped>
-  .login {
+.login {
   position: fixed;
   width: 100%;
   height: 100%;

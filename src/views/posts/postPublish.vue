@@ -2,7 +2,9 @@
   <div class="postPublish">
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/index' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item><a href="javascript:;">文章管理</a></el-breadcrumb-item>
+      <el-breadcrumb-item>
+        <a href="javascript:;">文章管理</a>
+      </el-breadcrumb-item>
       <el-breadcrumb-item>文章发布</el-breadcrumb-item>
     </el-breadcrumb>
     <el-card class="box-card" style="margin-top:20px">
@@ -24,6 +26,8 @@
             v-if="post.type==2"
             :on-success="handleSuccess"
             :headers="getToken()"
+            :on-remove="handleRemove"
+            :on-preview="handlePreview"
           >
             <el-button size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传视频文件</div>
@@ -119,6 +123,15 @@ export default {
     };
   },
   methods: {
+    handlePreview(file) {
+        console.log(file);
+      },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`);
+    },
     // 封面上传成功时触发
     onSuccess(response, file, fileList) {
       console.log(response, file, fileList);
@@ -131,8 +144,9 @@ export default {
     // 视频上传成功时触发
     handleSuccess(response, file, fileList) {
       console.log(response, file, fileList);
-      console.log(this.fileList);
       this.post.content = "http://127.0.0.1:3000" + response.data.url;
+      // this.fileList.push({name:file.name,url:this.post.content})
+      // console.log(this.fileList);
     },
     // 封装的请求头用户信息验证
     getToken() {
@@ -224,10 +238,13 @@ export default {
         if (v.url.indexOf("http") === -1) {
           v.url = "http://127.0.0.1:3000" + v.url;
         }
-        return {id:v.id,url:v.url};
+        return { id: v.id, url: v.url };
       });
+      console.log(this.post);
+      if(this.post.type===2){
+        this.fileList.push({name:this.post.title,url:this.post.content})
+      }
     }
-    console.log(this.post);
   },
 };
 </script>
